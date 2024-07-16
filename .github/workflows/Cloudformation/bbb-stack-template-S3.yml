@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Template to create our ETL lambda function, create the pycopg2 layer and give it permission to read our bucket. 
+
+Resources:
+
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties: 
+      Runtime: python3.12
+      Environment:
+        Variables: 
+          ssm_env_var_name: bbb_redshift_settings
+      FunctionName: bbb-ETL
+      Architectures: 
+        - x86_64
+      Role: arn:aws:iam::992382716453:role/lambda-execution-role
+      Code:
+        S3Bucket: bbb-cloudformation-deployment-packages
+        S3Key: extract_load_transform.zip
+      Handler: extract_load_transform.lambda_function.lambda_handler  # Correct handler
+      Layers:
+        - !Ref LambdaLayer
+      VpcConfig:
+        Ipv6AllowedForDualStack: False
+        SecurityGroupIds:
+          - sg-01e89bf9923cce8c1
+        SubnetIds:
+          - subnet-09d6ff273e2e93a9c
+
+  LambdaLayer:
+    Type: AWS::Lambda::LayerVersion
+    Properties:
+      LayerName: psycopg2-binary-bbb-layer
+      Description: Lambda layer to import module psycopg2-binary into lambda environment
+      Content:
+        S3Bucket: bbb-cloudformation-deployment-packages
+        S3Key: psycopg2.zip
+      CompatibleRuntimes:
+        - python3.9
+        - python3.10
+        - python3.11
+        - python3.12
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: bbb-group-bucket
+      NotificationConfiguration:
+        LambdaConfigurations:
+        - Event: s3:ObjectCreated:Put
+          Function: !GetAtt LambdaFunction.Arn
+
+  S3BucketPermission:
+    Type: AWS::Lambda::Permission
+    Properties: 
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref LambdaFunction
+      Principal: s3.amazonaws.com
+      SourceArn: arn:aws:s3:::bbb-group-bucket
