@@ -20,4 +20,16 @@ jobs:
       - name: Checkout-repo
         uses: actions/checkout@v2
 
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: eu-west-1
 
+      # - name: Deploy CloudFormation stack
+      # get actual code from Kaelan especially the yaml location i assume from repo root?
+      #   run: |
+      #     pwd && ls -a && aws cloudformation deploy \
+      #       --template-file .github/workflows/Cloudformation/bbb-stack-template-S3.yml \
+      #       --stack-name bbb-stack \
+      #       --region eu-west-1
