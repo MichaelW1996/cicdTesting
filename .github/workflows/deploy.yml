@@ -23,16 +23,14 @@ jobs:
       # delete the existing extract_transform_load.zip file
       - name: Delete existing zip file
         run: |
-          rm -rf cloudformation/extract_transform_load.zip
+          rm -rf .github/workflows/Cloudformation/extract_transform_load.zip
       
       # zip files from database folder, get_connections & lambda_function to folder called extract_transform_load then zip it in the cloud formationfolder
       - name: Zip files
         run: |
           ls
           pwd
-          mkdir extract_transform_load
-          cp database/get_connections.py extract_transform_load
-          cp database/lambda_function.py extract_transform_load
-          zip -r extract_transform_load.zip extract_transform_load
-          mkdir cloudformation
-          mv extract_transform_load.zip cloudformation 
+          mkdir .github/workflows/Cloudformation/extract_transform_load
+          cp database/get_connections.py .github/workflows/Cloudformation/extract_transform_load
+          cp database/lambda_function.py .github/workflows/Cloudformation/extract_transform_load
+          zip -r .github/workflows/Cloudformation/extract_transform_load.zip .github/workflows/Cloudformation/extract_transform_load
