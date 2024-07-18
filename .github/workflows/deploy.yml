@@ -31,8 +31,8 @@ jobs:
           ls
           pwd
           mkdir extract_transform_load
-          cp database/get_connections extract_transform_load
-          cp database/lambda_function extract_transform_load
+          cp database/get_connections.py extract_transform_load
+          cp database/lambda_function.py extract_transform_load
           zip -r extract_transform_load.zip extract_transform_load
           mkdir cloudformation
           mv extract_transform_load.zip cloudformation 
