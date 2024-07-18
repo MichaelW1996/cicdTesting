@@ -28,9 +28,8 @@ jobs:
       # zip files from database folder, get_connections & lambda_function to folder called extract_transform_load then zip it in the cloud formationfolder
       - name: Zip files
         run: |
-          ls
-          pwd
           mkdir .github/workflows/Cloudformation/extract_transform_load
           cp database/get_connections.py .github/workflows/Cloudformation/extract_transform_load
           cp database/lambda_function.py .github/workflows/Cloudformation/extract_transform_load
           zip -r .github/workflows/Cloudformation/extract_transform_load.zip .github/workflows/Cloudformation/extract_transform_load
+          ls .github/workflows/Cloudformation
